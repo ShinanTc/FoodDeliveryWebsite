@@ -1,6 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
 var express = require('express');
-const async = require('hbs/lib/async');
 var router = express.Router();
 
 const prisma = new PrismaClient();
