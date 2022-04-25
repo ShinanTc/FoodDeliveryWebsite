@@ -20,6 +20,6 @@ model Products {
 
 model Admin {
   id       Int    @id @default(autoincrement())
-  name     String @default("admin")
+  name     String @unique @default("admin")
   password String @default("admin123")
 }
