@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 var express = require('express');
 var router = express.Router();
+const jwt = require('jsonwebtoken');
 
 const prisma = new PrismaClient();
 
@@ -16,6 +17,8 @@ router.get('/login', (req, res, next) => {
 router.post('/login', async (req, res, next) => {
   try {
     const { username, password } = req.body;
+    console.log(username, password);
+
     const user = await prisma.Admin.findMany({
       where: {
         name: username,
@@ -23,12 +26,15 @@ router.post('/login', async (req, res, next) => {
       }
     });
 
-    if (user.length == 0)
-      console.log("Authentication Failed");
-    else {
-      res.status(200).render('admin/admin-home');
-      console.log("Authentication Success");
-    }
+    console.log(user);
+
+    if (user.length === 0)
+      console.log("Authentication Failed!");
+    else
+      console.log("Authentication Successfull!");
+    // const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+    // res.json({ accessToken: accessToken });
+
   } catch (error) {
     next(error);
   }
