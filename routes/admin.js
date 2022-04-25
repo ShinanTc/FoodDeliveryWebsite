@@ -18,10 +18,13 @@ router.post('/login', async (req, res, next) => {
     // Salting
     // Converting String to Character Array
     const usingSplit = password.split('');
+    
     // Adding '&' symbol to the end of the Array
     usingSplit.push('&');
+    
     // Adding '&' symbol to the beginning of the Array
     usingSplit.unshift('&');
+
     // Converting Character Array back to String
     const joinSplit = usingSplit.join('');
     password = md5(joinSplit);
