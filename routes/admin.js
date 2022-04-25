@@ -28,7 +28,6 @@ router.post('/login', async (req, res, next) => {
 
     const accessToken = jwt.sign(user[0], process.env.ACCESS_TOKEN_SECRET);
     res.json({ accessToken: accessToken });
-    // console.log({ accessToken: accessToken });
 
   } catch (error) {
     next(error);
