@@ -16,7 +16,7 @@ router.post('/login', async (req, res, next) => {
     console.log(username, password);
 
     const user = await prisma.Admin.findMany({
-      where: { name: username }
+      where: { name: username, password }
     });
 
     console.log(user);
