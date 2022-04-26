@@ -2,7 +2,8 @@ require('dotenv').config();
 const { PrismaClient } = require('@prisma/client');
 var express = require('express');
 var router = express.Router();
-var md5 = require('md5');
+const bcrypt = require('bcrypt');
+const { compare } = require('bcrypt');
 
 const prisma = new PrismaClient();
 
@@ -11,39 +12,27 @@ router.get('/login', (req, res, next) => {
 });
 
 router.post('/login', async (req, res, next) => {
+  let { username, password } = req.body;
+  console.log(username, password);
+
+  const hashPassword = await bcrypt.hash(password, 10);
+  console.log(hashPassword);
+
   try {
-    let { username, password } = req.body;
-    console.log(username, password);
-
-    // Salting
-    // Converting String to Character Array
-    const usingSplit = password.split('');
-    
-    // Adding '&' symbol to the end of the Array
-    usingSplit.push('&');
-    
-    // Adding '&' symbol to the beginning of the Array
-    usingSplit.unshift('&');
-
-    // Converting Character Array back to String
-    const joinSplit = usingSplit.join('');
-    password = md5(joinSplit);
-
     // Checking database for username and password
     const user = await prisma.Admin.findMany({
-      where: { name: username, password }
+      where: { name: username }
     });
 
-    console.log(user);
+    const comparePassword = await bcrypt.compare(hashPassword, user[0].password);
 
-    if (user.length === 0)
-      console.log("Authentication Failed!");
-    else {
+    if (comparePassword == null)
+      res.status(400).send("User doesn't Exist");
+    else
       res.render('admin/admin-home');
-      console.log("Authentication Successfull!");
-    }
   } catch (error) {
     next(error);
+    res.status(400).send("user doesn't Exist!!!");
   }
 });
 
