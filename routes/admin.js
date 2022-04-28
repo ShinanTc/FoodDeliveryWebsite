@@ -67,4 +67,15 @@ router.post('/add-product', verifyToken, (req, res, next) => {
   })
 });
 
+router.get('/logout', verifyToken, (req, res, next) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    res.redirect('/admin/login');
+  } else {
+    res.clearCookie("token");
+    res.redirect('/admin/login');
+  }
+});
+
 module.exports = router;
