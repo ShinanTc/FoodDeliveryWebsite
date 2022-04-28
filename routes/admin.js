@@ -32,7 +32,7 @@ router.post('/login', async (req, res, next) => {
   if (comparePassword == null)
     res.status(400).send("Password is Incorrect");
   else {
-    const accessToken = jwt.sign({ user }, 'secretkey', { expiresIn: "15m" });
+    const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
     res.cookie("token", accessToken, { httpOnly: true });
 
     res.redirect('/admin/dashboard');
@@ -50,8 +50,6 @@ router.post('/add-product', verifyToken, (req, res, next) => {
 
   if (req.files) {
     var file = req.files.productimg;
-    console.log('===============FILE================');
-    console.log(file);
     var filename = file.name;
   }
   else {
