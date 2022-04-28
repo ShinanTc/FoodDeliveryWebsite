@@ -5,12 +5,26 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const upload = require('express-fileupload');
+const compression = require('compression');
 
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 
 var app = express();
 app.use(upload());
+
+// Compression
+// app.use(compression({
+//   level: 6,
+//   threshold: 0,
+//   filter: (req, res) => {
+//     if (req.headers['x-no-compression']) {
+//       return false;
+//     }
+//     return compression.filter(req, res);
+//   }
+// }));
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
