@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Food Delivery Website' });
+  res.render('index');
 });
 
 module.exports = router;
