@@ -4,11 +4,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const upload = require('express-fileupload');
 
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 
 var app = express();
+app.use(upload());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
