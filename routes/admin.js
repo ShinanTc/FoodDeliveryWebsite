@@ -22,7 +22,7 @@ router.post('/login', async (req, res, next) => {
   //    Hashing Entered Password
   const hashPassword = await bcrypt.hash(password, 10);
 
-  //     // Checking database for username
+  // Checking database for username
   const user = await prisma.Admin.findUnique({
     where: { name: username }
   });
@@ -32,7 +32,7 @@ router.post('/login', async (req, res, next) => {
   if (comparePassword == null)
     res.status(400).send("Password is Incorrect");
   else {
-    const accessToken = jwt.sign({ user }, 'secretkey');
+    const accessToken = jwt.sign({ user }, 'secretkey', { expiresIn: "15m" });
     res.cookie("token", accessToken, { httpOnly: true });
 
     res.redirect('/admin/dashboard');
@@ -40,6 +40,31 @@ router.post('/login', async (req, res, next) => {
 
 })
 
+// ADMIN - ADD PRODUCT
+router.get('/add-product', verifyToken, (req, res, next) => {
+  res.render('admin/admin-add-product');
+});
 
+router.post('/add-product', verifyToken, (req, res, next) => {
+  const { productname } = req.body;
+
+  if (req.files) {
+    var file = req.files.productimg;
+    console.log('===============FILE================');
+    console.log(file);
+    var filename = file.name;
+  }
+  else {
+    res.status(400).send("No File Uploaded");
+  }
+
+  file.mv(`./public/images/${filename}`, (err) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.send("File Uploaded!!!")
+    }
+  })
+});
 
 module.exports = router;

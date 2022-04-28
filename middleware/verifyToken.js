@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-    console.log("Inside Verify Token");
-
     const token = req.cookies.token;
 
     try {
@@ -13,6 +11,4 @@ module.exports = (req, res, next) => {
         res.clearCookie("token");
         return res.redirect("/admin/login");
     }
-
-    console.log(token);
 }
