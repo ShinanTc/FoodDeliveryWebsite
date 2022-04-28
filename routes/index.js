@@ -5,8 +5,9 @@ var router = express.Router();
 const prisma = new PrismaClient();
 
 /* GET home page. */
-router.get('/', (req, res, next) => {
-  res.render('index');
+router.get('/', async (req, res, next) => {
+  const foods = await prisma.Foods.findMany({})
+  res.render('index', { foods });
 });
 
 module.exports = router;

@@ -5,7 +5,6 @@ var router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const verifyToken = require('../middleware/verifyToken');
-const { path } = require('express/lib/application');
 const prisma = new PrismaClient();
 
 // AMDIN - DASHBOARD
@@ -59,30 +58,39 @@ router.post('/add-product', verifyToken, async (req, res, next) => {
     res.status(400).send("No File Uploaded");
   }
 
-  var filePath = `./public/images/${filename}`;
-
-  file.mv(filePath, (err) => {
+  file.mv(`./public/images/${filename}`, (err) => {
     if (err) {
       res.status(500).send(err);
     } else {
       res.send("File Uploaded!!!")
     }
-  })
+  });
 
 
   try {
     const product = await prisma.Foods.create({
       data: {
         productName: productname,
-        imageUrl: filePath
+        imageUrl: file
       }
     });
 
-    console.log(product+'is pushed =========================================');
+    console.log(product + 'is pushed =========================================');
 
   } catch (error) {
     res.status(500).send(error.message);
   }
+
+});
+
+// ADMIN - VIEW PRODUCTS
+router.get('/view-products', verifyToken, async (req, res, next) => {
+  const foods = await prisma.Foods.findMany({});
+  res.render('admin/admin-view-products', { foods });
+});
+
+// ADMIN - DELETE PRODUCT
+router.get('/del-product', verifyToken, (req, res, next) => {
 
 });
 

@@ -244,16 +244,18 @@
                         </div>
                     </div>
                     <div class="row gx-5 justify-content-center">
+                        {{#each foods}}
                         <div class="col-md-6 col-lg-4 col-xl-3 mb-5">
-                            <a class="card lift" href="#!">
-                                <img class="card-img-top" src="https://source.unsplash.com/Yr4n8O_3UPc/800x500"
-                                    alt="..." />
+                            <a class="card lift" href="#">
+                                <img class="card-img-top" src="{{this.imageUrl}}" alt="..." />
                                 <div class="card-body text-center py-3">
-                                    <h6 class="card-title mb-0">Pizzas</h6>
+                                    <h6 class="card-title mb-0">{{this.productName}}</h6>
                                 </div>
                             </a>
                         </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3 mb-5">
+                        {{/each}}
+
+                        {{!-- <div class="col-md-6 col-lg-4 col-xl-3 mb-5">
                             <a class="card lift" href="#!">
                                 <img class="card-img-top" src="https://source.unsplash.com/YbGMa1Jz1yY/800x500"
                                     alt="..." />
@@ -315,7 +317,7 @@
                                     <h6 class="card-title mb-0">Soup</h6>
                                 </div>
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="svg-border-angled text-white">
