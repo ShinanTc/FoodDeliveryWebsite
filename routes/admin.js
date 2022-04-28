@@ -3,36 +3,43 @@ const { PrismaClient } = require('@prisma/client');
 var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcrypt');
-
+const jwt = require('jsonwebtoken');
+const verifyToken = require('../middleware/verifyToken');
 const prisma = new PrismaClient();
+
+router.get('/dashboard', verifyToken, (req, res, next) => {
+  res.render('admin/admin-dashboard');
+});
 
 router.get('/login', (req, res, next) => {
   res.render('admin/admin-login');
 });
 
 router.post('/login', async (req, res, next) => {
-  let { username, password } = req.body;
+  const { username, password } = req.body;
   console.log(username, password);
 
+  //    Hashing Entered Password
   const hashPassword = await bcrypt.hash(password, 10);
-  console.log(hashPassword);
 
-  try {
-    // Checking database for username and password
-    const user = await prisma.Admin.findMany({
-      where: { name: username }
-    });
+  //     // Checking database for username
+  const user = await prisma.Admin.findUnique({
+    where: { name: username }
+  });
 
-    const comparePassword = await bcrypt.compare(hashPassword, user[0].password);
+  const comparePassword = await bcrypt.compare(hashPassword, user.password);
 
-    if (comparePassword == null)
-      res.status(400).send("User doesn't Exist");
-    else
-      res.render('admin/admin-home');
-  } catch (error) {
-    next(error);
-    res.status(400).send("user doesn't Exist!!!");
+  if (comparePassword == null)
+    res.status(400).send("Password is Incorrect");
+  else {
+    const accessToken = jwt.sign({ user }, 'secretkey');
+    res.cookie("token", accessToken, { httpOnly: true });
+
+    res.redirect('/admin/dashboard');
   }
-});
+
+})
+
+
 
 module.exports = router;
