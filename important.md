@@ -8,3 +8,12 @@ middleware -> verifyToken.js
 
 ### For Authentication Middlewares
 controllers -> authController.j
+
+### Add these to improve security in JWT tokens
+
+res.cookie("token",token, {
+    httpOnly: true,
+    secure: true,
+    maxAge: 1000000,
+    signed: true,
+});

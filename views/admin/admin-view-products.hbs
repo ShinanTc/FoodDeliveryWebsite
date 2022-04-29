@@ -131,7 +131,7 @@
                 <th>PRODUCT NAME</th>
                 <th>PRODUCT IMAGE</th>
                 <th>CREATED AT</th>
-                <th>CREATED AT</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -141,7 +141,7 @@
                 <td>{{this.productName}}</td>
                 <td>{{this.imageUrl}}</td>
                 <td>{{this.createdAt}}</td>
-                <td><button class="custom-btn btn-13">DELETE</button></td>
+                <td><a data-confirm="Are you sure?" data-method="delete" href="/admin/del-product/{{this.id}}"><button class="custom-btn btn-13">DELETE</button></a></td>
             </tr>
             {{/each}}
         </tbody>
