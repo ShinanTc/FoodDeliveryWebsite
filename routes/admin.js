@@ -31,7 +31,7 @@ router.post('/login', async (req, res, next) => {
   });
 
   const comparePassword = await bcrypt.compare(hashPassword, user.password);
-  
+
   // Checking if the password exist or not
   if (comparePassword == null)
     res.status(400).send("Password is Incorrect");
@@ -41,7 +41,7 @@ router.post('/login', async (req, res, next) => {
     const hashedId = await bcrypt.hash(`${user.id}`, 10);
 
     // Signing JWT token
-    const accessToken = jwt.sign({ hashedId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+    const accessToken = jwt.sign({ id: hashedId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
     res.cookie("token", accessToken, { httpOnly: true });
 
     res.redirect('/admin/dashboard');
