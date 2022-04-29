@@ -34,7 +34,7 @@ router.post('/login', async (req, res, next) => {
   if (comparePassword == null)
     res.status(400).send("Password is Incorrect");
   else {
-    const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+    const accessToken = jwt.sign({ id: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
     res.cookie("token", accessToken, { httpOnly: true });
 
     res.redirect('/admin/dashboard');
@@ -58,11 +58,13 @@ router.post('/add-product', verifyToken, async (req, res, next) => {
     res.status(400).send("No File Uploaded");
   }
 
-  file.mv(`./public/images/${filename}`, (err) => {
+  const filePath = `./uploads/img/${filename}`;
+
+  file.mv(filePath, (err) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      res.send("File Uploaded!!!")
+      res.send("File Uploaded!!!");
     }
   });
 
@@ -71,11 +73,9 @@ router.post('/add-product', verifyToken, async (req, res, next) => {
     const product = await prisma.Foods.create({
       data: {
         productName: productname,
-        imageUrl: file
+        imageUrl: filePath
       }
     });
-
-    console.log(product + 'is pushed =========================================');
 
   } catch (error) {
     res.status(500).send(error.message);
@@ -90,8 +90,24 @@ router.get('/view-products', verifyToken, async (req, res, next) => {
 });
 
 // ADMIN - DELETE PRODUCT
-router.get('/del-product', verifyToken, (req, res, next) => {
+router.delete('/del-product/:id', verifyToken, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const deletedFood = await prisma.Foods.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.redirect('/admin/view-products');
+    console.log(deletedFood);
 
+  } catch (error) {
+    res.send(error);
+  }
+
+
+  console.log(food);
 });
 
 // ADMIN - LOGOUT

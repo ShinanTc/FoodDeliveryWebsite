@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const upload = require('express-fileupload');
+const compression = require('compression');
 
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
@@ -21,6 +22,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(compression({
+  level: 6,
+  threshold: 0,
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  }
+}))
 
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
