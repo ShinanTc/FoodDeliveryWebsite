@@ -21,7 +21,6 @@ router.get('/login', (req, res, next) => {
 
 router.post('/login', async (req, res, next) => {
   const { username, password } = req.body;
-  console.log(username, password);
 
   //    Hashing Entered Password
   const hashPassword = await bcrypt.hash(password, 10);
@@ -32,16 +31,21 @@ router.post('/login', async (req, res, next) => {
   });
 
   const comparePassword = await bcrypt.compare(hashPassword, user.password);
-
+  
+  // Checking if the password exist or not
   if (comparePassword == null)
     res.status(400).send("Password is Incorrect");
   else {
-    const accessToken = jwt.sign({ id: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+
+    // Hashing User id
+    const hashedId = await bcrypt.hash(`${user.id}`, 10);
+
+    // Signing JWT token
+    const accessToken = jwt.sign({ hashedId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
     res.cookie("token", accessToken, { httpOnly: true });
 
     res.redirect('/admin/dashboard');
   }
-
 });
 
 // ADMIN - ADD PRODUCT
