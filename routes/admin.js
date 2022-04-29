@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 const multer = require('multer');
 const upload = multer({ dest: '/public' });
 
-// AMDIN - DASHBOARD
+// ADMIN - DASHBOARD
 router.get('/dashboard', verifyToken, (req, res, next) => {
   res.render('admin/admin-dashboard');
 });
