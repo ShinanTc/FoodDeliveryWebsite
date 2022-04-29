@@ -32,7 +32,7 @@ app.use(compression({
     }
     return compression.filter(req, res);
   }
-}))
+}));
 
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);

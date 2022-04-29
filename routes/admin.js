@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const verifyToken = require('../middleware/verifyToken');
 const prisma = new PrismaClient();
+const multer = require('multer');
+const upload = multer({ dest: '/public' });
 
 // AMDIN - DASHBOARD
 router.get('/dashboard', verifyToken, (req, res, next) => {
@@ -58,9 +60,9 @@ router.post('/add-product', verifyToken, async (req, res, next) => {
     res.status(400).send("No File Uploaded");
   }
 
-  const filePath = `./uploads/img/${filename}`;
+  const filePath = `/images/${filename}`;
 
-  file.mv(filePath, (err) => {
+  file.mv(`./public/images/${filename}`, (err) => {
     if (err) {
       res.status(500).send(err);
     } else {
@@ -70,7 +72,7 @@ router.post('/add-product', verifyToken, async (req, res, next) => {
 
 
   try {
-    const product = await prisma.Foods.create({
+    const addedFood = await prisma.Foods.create({
       data: {
         productName: productname,
         imageUrl: filePath
