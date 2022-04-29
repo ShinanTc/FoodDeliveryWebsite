@@ -13,6 +13,19 @@ var adminRouter = require('./routes/admin');
 var app = express();
 app.use(upload());
 
+// Compression
+app.use(compression({
+  level: 6,
+  threshold: 0,
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  }
+}));
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');

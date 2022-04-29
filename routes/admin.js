@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 const multer = require('multer');
 const upload = multer({ dest: '/public' });
 
-// AMDIN - DASHBOARD
+// ADMIN - DASHBOARD
 router.get('/dashboard', verifyToken, (req, res, next) => {
   res.render('admin/admin-dashboard');
 });
@@ -23,7 +23,7 @@ router.post('/login', async (req, res, next) => {
   const { username, password } = req.body;
   console.log(username, password);
 
-  //    Hashing Entered Password
+  // Hashing Entered Password
   const hashPassword = await bcrypt.hash(password, 10);
 
   // Checking database for username
@@ -72,7 +72,7 @@ router.post('/add-product', verifyToken, async (req, res, next) => {
 
 
   try {
-    const addedFood = await prisma.Foods.create({
+    const createdFood = await prisma.Foods.create({
       data: {
         productName: productname,
         imageUrl: filePath
@@ -87,7 +87,7 @@ router.post('/add-product', verifyToken, async (req, res, next) => {
 
 // ADMIN - VIEW PRODUCTS
 router.get('/view-products', verifyToken, async (req, res, next) => {
-  const foods = await prisma.Foods.findMany({});
+  const foods = await prisma.Foods.findMany();
   res.render('admin/admin-view-products', { foods });
 });
 
