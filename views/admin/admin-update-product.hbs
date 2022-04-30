@@ -6,12 +6,16 @@
 
 <p>ADD PRODUCT</p>
 
+{{#each updatedFood}}
+
 <form action="/admin/add-product" method="post" enctype="multipart/form-data">
     <label for="productname">Food Name</label>
-    <input type="text" name="productname" required="required"><br>
+    <input type="text" name="productname" value="{{this.productName}}" required="required"><br>
 
     <label for="productimg">Food Image</label>
-    <input type="file" name="productimg" accept="image/*" required="required"><br>
+    <input type="file" name="productimg" value="{{this.imageUrl}}" accept="image/*" required="required"><br>
 
     <button type="submit">Submit</button>
 </form>
+
+{{/each}}

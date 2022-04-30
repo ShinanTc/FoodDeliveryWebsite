@@ -91,10 +91,25 @@ router.get('/view-products', verifyToken, async (req, res, next) => {
   res.render('admin/admin-view-products', { foods });
 });
 
+// ADMIN - UPDATE PRODUCT
+router.get('/update-product/:id', verifyToken, async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const updatedFood = await prisma.Foods.findMany({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.render('admin/admin-update-product', { updatedFood });
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+
 // ADMIN - DELETE PRODUCT
 router.get('/del-product/:id', verifyToken, async (req, res, next) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
     const deletedFood = await prisma.Foods.delete({
       where: {
         id: Number(id),
