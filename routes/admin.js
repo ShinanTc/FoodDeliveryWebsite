@@ -59,19 +59,15 @@ router.post('/add-product', verifyToken, async (req, res, next) => {
   if (req.files) {
     var file = req.files.productimg;
     var filename = file.name;
-  }
-  else {
+  } else {
     res.status(400).send("No File Uploaded");
   }
 
   const filePath = `/images/${filename}`;
 
   file.mv(`./public/images/${filename}`, (err) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.send("File Uploaded!!!");
-    }
+    if (err) res.status(500).send(err);
+    res.redirect('/admin/add-product');
   });
 
 
@@ -96,24 +92,19 @@ router.get('/view-products', verifyToken, async (req, res, next) => {
 });
 
 // ADMIN - DELETE PRODUCT
-router.delete('/del-product/:id', verifyToken, async (req, res, next) => {
+router.get('/del-product/:id', verifyToken, async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const deletedFood = await prisma.Foods.delete({
       where: {
         id: Number(id),
       },
     });
     res.redirect('/admin/view-products');
-    console.log(deletedFood);
 
   } catch (error) {
     res.send(error);
   }
-
-
-  console.log(food);
 });
 
 // ADMIN - LOGOUT
