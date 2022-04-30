@@ -59,19 +59,15 @@ router.post('/add-product', verifyToken, async (req, res, next) => {
   if (req.files) {
     var file = req.files.productimg;
     var filename = file.name;
-  }
-  else {
+  } else {
     res.status(400).send("No File Uploaded");
   }
 
   const filePath = `/images/${filename}`;
 
   file.mv(`./public/images/${filename}`, (err) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.send("File Uploaded!!!");
-    }
+    if (err) res.status(500).send(err);
+    res.redirect('/admin/add-product');
   });
 
 
@@ -95,25 +91,68 @@ router.get('/view-products', verifyToken, async (req, res, next) => {
   res.render('admin/admin-view-products', { foods });
 });
 
-// ADMIN - DELETE PRODUCT
-router.delete('/del-product/:id', verifyToken, async (req, res, next) => {
+// ADMIN - UPDATE PRODUCT
+router.get('/update-product/:id', verifyToken, async (req, res, next) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    console.log(id);
+    const updatedFood = await prisma.Foods.findMany({
+      where: {
+        id: Number(id),
+      }
+    });
+    res.render('admin/admin-update-product', { updatedFood });
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+
+router.post('/update-product', async (req, res, next) => {
+  const { id, productname } = req.body;
+
+  if (req.files) {
+    var file = req.files.productimg;
+    var filename = file.name;
+  } else {
+    res.status(400).send("No File Uploaded");
+  }
+
+  const filePath = `/images/${filename}`;
+
+  file.mv(`./public/images/${filename}`, (err) => {
+    if (err) res.status(500).send(err);
+    res.redirect('/admin/view-products');
+  });
+
+  try {
+    const updatedFood = await prisma.Foods.update({
+      where: {
+        id: Number(id)
+      },
+      data: {
+        productName: productname,
+        imageUrl: filePath
+      }
+    })
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+
+});
+
+// ADMIN - DELETE PRODUCT
+router.get('/del-product/:id', verifyToken, async (req, res, next) => {
+  const { id } = req.params;
+  try {
     const deletedFood = await prisma.Foods.delete({
       where: {
         id: Number(id),
       },
     });
     res.redirect('/admin/view-products');
-    console.log(deletedFood);
 
   } catch (error) {
     res.send(error);
   }
-
-
-  console.log(food);
 });
 
 // ADMIN - LOGOUT

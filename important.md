@@ -17,3 +17,7 @@ res.cookie("token",token, {
     maxAge: 1000000,
     signed: true,
 });
+
+# NodeJS popup modal
+[] Find Pop Modal Template from codepen
+[] Implement it for Deleting a product
