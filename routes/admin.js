@@ -98,12 +98,45 @@ router.get('/update-product/:id', verifyToken, async (req, res, next) => {
     const updatedFood = await prisma.Foods.findMany({
       where: {
         id: Number(id),
-      },
+      }
     });
     res.render('admin/admin-update-product', { updatedFood });
   } catch (err) {
     res.status(404).send(err);
   }
+});
+
+router.post('/update-product', async (req, res, next) => {
+  const { id, productname } = req.body;
+
+  if (req.files) {
+    var file = req.files.productimg;
+    var filename = file.name;
+  } else {
+    res.status(400).send("No File Uploaded");
+  }
+
+  const filePath = `/images/${filename}`;
+
+  file.mv(`./public/images/${filename}`, (err) => {
+    if (err) res.status(500).send(err);
+    res.redirect('/admin/view-products');
+  });
+
+  try {
+    const updatedFood = await prisma.Foods.update({
+      where: {
+        id: Number(id)
+      },
+      data: {
+        productName: productname,
+        imageUrl: filePath
+      }
+    })
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+
 });
 
 // ADMIN - DELETE PRODUCT
