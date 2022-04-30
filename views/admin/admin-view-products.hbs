@@ -19,7 +19,8 @@
             <tr>
                 <td>{{this.id}}</td>
                 <td>{{this.productName}}</td>
-                <td>{{this.imageUrl}}</td>
+                <td><a href="{{this.imageUrl}}"><img src="{{this.imageUrl}}" height="100" width="100"
+                            alt="Image Not Available"></a></td>
                 <td>{{this.createdAt}}</td>
                 <td><a href="/admin/del-product/{{this.id}}"><button class="custom-btn btn-13">DELETE</button></a></td>
             </tr>
