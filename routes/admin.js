@@ -45,6 +45,7 @@ router.post('/login', async (req, res, next) => {
     res.cookie("token", accessToken, { httpOnly: true });
 
     res.redirect('/admin/dashboard');
+
   }
 });
 
