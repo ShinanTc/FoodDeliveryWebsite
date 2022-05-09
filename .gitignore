@@ -1,4 +1,4 @@
 node_modules
-.env
+.env*
 important.md
 README.md
